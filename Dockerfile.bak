@@ -1,0 +1,17 @@
+FROM nagasuga/docker-hive
+
+RUN wget http://archive.apache.org/dist/db/derby/db-derby-10.13.1.1/db-derby-10.13.1.1-bin.tar.gz
+ENV DERBY_HOME=/usr/local/db-derby-10.13.1.1-bin
+ENV PATH="${PATH}:$DERBY_HOME/bin"
+ENV CLASSPATH="${CLASSPATH}:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar"
+
+ADD hive-bootstrap.sh /etc/hive-bootstrap.sh
+RUN chown root:root /etc/hive-bootstrap.sh
+RUN chmod 700 /etc/hive-bootstrap.sh
+
+RUN cp /usr/local/hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.2.jar /usr/local/hadoop/share/hadoop/common/lib/
+RUN cp /usr/local/hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar /usr/local/hadoop/share/hadoop/common/lib/
+
+ADD core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
+
+#WORKDIR /usr/local/hive
